@@ -1,0 +1,79 @@
+/*------------------------------------------------------------
+Calculator.c
+Code using of infix to postfix and postfix evaluation methods
+Kavya Kumbhat
+10/09/25
+-----------------------------------------------------------*/
+#include<stdio.h>
+#include<stdlib.h>
+#include<string.h>
+#include<ctype.h>
+#include<math.h>
+
+#define MAX 100
+
+// ---------- Stack Structure ----------
+typedef struct {
+    float data[MAX];
+    int Top;
+} STACK;
+
+STACK S;
+
+// ---------- Stack Prototypes ----------
+void initStack();
+void Push(float x);
+float Pop();
+float peek();
+int isEmpty();
+
+// ----------Prototypes For Conversion And Evaluation----------
+int precedence(char c);
+void infixToPostfix(char infix[], char postfix[]);
+float evalPostfix(char postfix[]);
+
+// ---------- main function -----------------------------------
+int main() {
+    char infix[MAX], postfix[MAX];
+    float result;
+
+    printf("Enter infix expression : \n");
+    fgets(infix, MAX, stdin);
+
+    // remove newline if exists
+    infix[strcspn(infix, "\n")] = '\0';
+
+    postfix[0] = '\0';
+
+    infixToPostfix(infix, postfix);
+    printf("Postfix: %s\n", postfix);
+
+    result = evalPostfix(postfix);
+    printf("Result = %.2f\n", result);
+
+    return 0;
+}
+
+// ---------- initialize function -----------------------------
+void initStack() {
+    S.Top = -1;
+}
+
+//-------------push function-----------------------------------
+void Push(float x) {
+    if (S.Top == MAX - 1) {
+        printf("Stack Overflow\n");
+        return;
+    }
+    S.data[++S.Top] = x;
+}
+
+//------------pop function-------------------------------------
+float Pop() {
+    if (S.Top == -1) {
+        printf("Stack Underflow\n");
+        return 0;
+    }
+    return S.data[S.Top--];
+}
+

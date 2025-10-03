@@ -1,0 +1,461 @@
+/*----------------------------------------------
+linkedlist.c
+Program To Perform Operations On The Linked List
+Kavya Kumbhat
+09/07/25
+-----------------------------------------------*/
+#include <stdio.h>
+#include <stdlib.h>
+#include <memory.h>
+
+typedef struct ListType{
+    int Data;
+    struct ListType* Next;
+} LISTNODE;
+
+LISTNODE*Head=NULL;
+
+// Function Prototypes
+void Menu(int* choice);
+void InitList();
+void InsertListNode(int Num);
+void PrintList(LISTNODE*Head);
+int SearchNum(int Num);
+int CountNode(LISTNODE*Head);
+int DeleteFirstNode();
+int DeleteLastNode();
+int MaxNum(LISTNODE*Head);
+void DeleteNode(int Num);
+
+int main() {
+    int choice, n, Num;
+    InitList();
+    Menu(&choice);
+    while (choice) {
+        switch (choice) {
+            case 1:
+                printf("Enter the number of elements to be inserted in the list: ");
+                scanf("%d", &n);
+                printf("Enter the elements:\n");
+                for (int i = 1; i <= n; i++) {
+                    scanf("%d", &Num);
+                    InsertListNode(Num);
+                }
+                break;
+
+            case 2:
+            	printf("The List Is:\n");
+                PrintList(Head);
+                break;
+            	
+            case 3:
+            	n=DeleteFirstNode();
+            	printf("The First Node Deleted Is:%d",n);
+            	break;
+            	
+            case 4:
+            	n=DeleteLastNode();
+            	printf("The Last Node Deleted Is:%d",n);
+            	break;
+            	
+            case 5:
+            	n=CountNode(Head);
+            	printf("The Number Nodes In The List Is:%d",n);
+            	break;
+            	
+            case 6:
+            	n=MaxNum(Head);
+            	printf("The Maximum Number In The List Is:%d",n);
+            	break;
+            
+            case 7:
+                printf("Enter a number to be searched: ");
+                scanf("%d", &n);
+                if (SearchNum(n)){
+                	printf("%d is found in the list.\n", n);
+				}
+                else{
+                	printf("%d is not found in the list.\n", n);
+				}
+                break;
+                
+            case 8:
+                printf("Enter the number to be deleted: ");
+                scanf("%d", &n);
+                DeleteNode(n);
+                break;
+
+
+            case 9:
+                exit(0);
+
+            default:
+                printf("Invalid Choice\n");
+        }
+        Menu(&choice);
+    }
+    return 0;
+}
+
+void Menu(int* choice) {
+    printf("\n------------LINKED LIST---------------\n");
+    printf("1. Insert list\n");
+    printf("2. Print list\n");
+    printf("3. Delete the first node\n");
+    printf("4. Delete the last node\n");
+    printf("5. Display the no of nodes\n");
+    printf("6. Display the maximum no\n");
+    printf("7. Search a no\n");
+    printf("8. Delete a number\n");
+    printf("9. Exit\n");
+    printf("Enter Your Choice: ");
+    scanf("%d", choice); 
+}
+
+//initialize function
+void InitList()
+{
+    Head=NULL;
+}
+
+//insert function
+void InsertListNode(int Num)
+{
+    //creation of node
+    LISTNODE*Curr,*Node;
+    Node=(LISTNODE*)malloc(sizeof(LISTNODE));
+    Node->Data=Num;
+    Node->Next=NULL;
+    
+    //case1: no list, make incoming node the head
+    if(Head==NULL){
+        Head=Node;
+        return;
+    }
+    
+    //case2: there is a list,traverse the list make the node at the node athe end of the list
+    Curr=Head;
+    while(Curr->Next!=NULL){
+        Curr=Curr->Next;
+    }
+    Curr->Next=Node;
+}
+
+//print function
+void PrintList(LISTNODE *Head)
+{
+    LISTNODE*Curr;
+    Curr=Head;
+    
+    //case1:no list
+    if(Head==NULL){
+        return;
+    }
+    
+    //case2:list is there
+    while(Curr){
+        printf("%d->",Curr->Data);
+        Curr=Curr->Next;
+    }
+    printf("NULL\n");
+}
+
+//Search a given number
+int SearchNum(int Num)
+{
+    LISTNODE*Curr;
+    
+    Curr=Head;
+    
+    //case1:no list
+    if(Head==NULL){
+        printf("No List");
+        return 0;
+    }
+    
+    //case2: if list is there,traverse it
+    while(Curr!=NULL){
+        if(Num==Curr->Data){
+            return 1;
+        }
+        Curr=Curr->Next;
+    }
+    return 0;
+}
+
+void DeleteNode(int Num) {
+    LISTNODE *Curr = Head, *Prev = NULL;
+
+    if (Head == NULL) {
+        printf("No list exists.\n");
+        return;
+    }
+
+    // Case 1: Delete head
+    if (Num == Head->Data) {
+        Curr = Head;
+        Head = Head->Next;
+        free(Curr);
+        return;
+    }
+
+    // Case 2: Traverse and delete
+    while (Curr) {
+        if (Num == Curr->Data) {
+            Prev->Next = Curr->Next;
+            free(Curr);
+            printf("%d deleted from the list.\n", Num);
+            return;
+        }
+        Prev = Curr;
+        Curr = Curr->Next;
+    }
+
+    printf("%d is not found in the list.\n", Num);
+}
+
+//firstnodedeletion
+int DeleteFirstNode(){
+	LISTNODE*Curr;
+	int Num;
+	
+	Curr=Head;
+	
+	//case1:no list
+	if(Head==NULL){
+		printf("no list is present\n");
+	}
+	
+	//case2:list is present
+	Head=Head->Next;
+	Num=Curr->Data;
+	free(Curr);
+	return Num;
+}
+
+//lastnodedeletion
+int DeleteLastNode(){
+	LISTNODE*Prev,*Curr;
+	int Num;
+	
+	//case1:no list
+	if(Head==NULL){
+		printf("no list is present\n");
+	}
+	
+	//case2:list is present
+	Curr=Head;
+	while(Curr->Next!=NULL){
+		Prev=Curr;
+		Curr=Curr->Next;
+	}
+	Prev->Next=NULL;
+	Num=Curr->Data;
+	free(Curr);
+	return Num;
+}
+
+//countfunction
+int CountNode(LISTNODE*Head){
+	int count=0;
+	LISTNODE*Curr;
+	Curr=Head;
+	
+	while(Curr){
+		count=count+1;
+		Curr=Curr->Next;
+	}
+	return count;
+}
+
+//max function
+int MaxNum(LISTNODE*Head){
+	int max = Head->Data;
+    LISTNODE* Curr = Head->Next;
+
+    while (Curr != NULL) {
+        if (Curr->Data > max)
+            max = Curr->Data;
+        Curr = Curr->Next;
+    }
+    return max;
+}
+
+
+
+/*-----------------------
+Orderedlinkedlist.c
+A Program of Ordered Linked List
+Kavya
+2/07/25
+-------------------------*/
+#include <stdio.h>
+#include <stdlib.h>
+#include <memory.h>
+
+typedef struct ListType {
+    int Data;
+    struct ListType* Next;
+} LISTNODE;
+
+LISTNODE* Head = NULL;
+
+// Function Prototypes
+void Menu(int* choice);
+void InitList();
+void InsertListNode(int Num);
+void DeleteListNode(int Num);
+void Reverse();
+void PrintList(LISTNODE* Head);
+
+// Main Function
+int main() {
+    int choice, n, num, Num;
+    InitList();
+    Menu(&choice);
+    while (choice) {
+        switch (choice) {
+            case 1:
+                printf("Enter the number of elements to be inserted in the list: ");
+                scanf("%d", &n);
+                printf("Enter the elements:\n");
+                for (int i = 1; i <= n; i++) {
+                    scanf("%d", &Num);
+                    InsertListNode(Num);
+                }
+                break;
+
+            case 2:
+                printf("Enter the number to be deleted: ");
+                scanf("%d", &num);
+                DeleteListNode(num);
+                break;
+
+            case 3:
+                printf("Reverse The List:\n");
+                Reverse();
+
+            case 4:
+                printf("The List Is:\n");
+                PrintList(Head);
+                break;
+
+            case 5:
+                exit(0);
+
+            default:
+                printf("Invalid Choice\n");
+        }
+        Menu(&choice);
+    }
+    return 0;
+}
+
+// Menu Function
+void Menu(int* choice) {
+    printf("\n------------ORDERED LINKED LIST---------------\n");
+    printf("1. Insert Node\n");
+    printf("2. Delete Node\n");
+    printf("3. Reverse The List\n");
+    printf("4. Display List\n");
+    printf("5. Exit\n");
+    printf("Enter Your Choice: ");
+    scanf("%d", choice); 
+}
+
+// Initialize Function
+void InitList() {
+    Head = NULL;
+}
+
+// Insert Function
+void InsertListNode(int Num) {
+    LISTNODE *Curr, *Node, *Prev;
+    Node = (LISTNODE*)malloc(sizeof(LISTNODE));
+    Node->Data = Num;
+    Node->Next = NULL;
+
+    // Case 1: Empty list
+    if (Head == NULL) {
+        Head = Node;
+        return;
+    }
+
+    // Case 2: Insert at beginning
+    if (Num <= Head->Data) {
+        Node->Next = Head;
+        Head = Node;
+        return;
+    }
+
+    // Case 3: Insert at appropriate location
+    Curr = Head;
+    while (Curr && Num >= Curr->Data) {
+        Prev = Curr;
+        Curr = Curr->Next;
+    }
+    Prev->Next = Node;
+    Node->Next = Curr;
+}
+
+// Delete Function
+void DeleteListNode(int Num) {
+    LISTNODE *Curr = Head, *Prev = NULL;
+
+    if (Head == NULL) {
+        printf("No list exists.\n");
+        return;
+    }
+
+    // Case 1: Delete head
+    if (Num == Head->Data) {
+        Curr = Head;
+        Head = Head->Next;
+        free(Curr);
+        printf("%d deleted from the list.\n", Num);
+        return;
+    }
+
+    // Case 2: Traverse and delete
+    while (Curr) {
+        if (Num == Curr->Data) {
+            Prev->Next = Curr->Next;
+            free(Curr);
+            printf("%d deleted from the list.\n", Num);
+            return;
+        }
+        Prev = Curr;
+        Curr = Curr->Next;
+    }
+
+    printf("%d is not found in the list.\n", Num);
+}
+
+
+// Print Function
+void PrintList(LISTNODE *Head) {
+    LISTNODE* Curr = Head;
+
+    if (Head == NULL) {
+        printf("List is empty.\n");
+        return;
+    }
+
+    while (Curr) {
+        printf("%d -> ", Curr->Data);
+        Curr = Curr->Next;
+    }
+    printf("NULL\n");
+}
+
+//reverse function
+void Reverse(){
+	LISTNODE *Prev=NULL ,*Curr=Head,*Next=Next;
+	while(Curr){
+		Next=Curr->Next;
+        Curr->Next=Prev;
+        Prev=Curr;
+        Curr=Next;
+    }
+    Head=Prev;
+}

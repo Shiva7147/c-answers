@@ -1,0 +1,287 @@
+/*--------------------------------------
+queue.c
+A program to perform operations on queue
+Kavya Kumbhat
+06/08/25
+---------------------------------------*/
+#include <stdio.h>
+#include <stdlib.h>
+#include <memory.h>
+
+typedef struct QueueType {
+    int Data;
+    struct QueueType *Next;
+} QUEUENODE;
+
+QUEUENODE *Front, *Rear;
+
+// Function Prototypes
+void Menu(int* choice);
+void InitQueue();
+void EnQueue(int Num);
+int DeQueue();
+void PrintQueue();
+
+// Main Function
+int main() {
+    int choice, n, num, Num;
+    InitQueue();
+    Menu(&choice);
+    while (choice) {
+        switch (choice) {
+            case 1:
+                printf("Enter the number of elements to be inserted in the queue: ");
+                scanf("%d", &n);
+                printf("Enter the elements:\n");
+                for (int i = 1; i <= n; i++) {
+                    scanf("%d", &Num);
+                    EnQueue(Num);
+                }
+                break;
+
+            case 2:
+            	n=DeQueue();
+                printf("The First Node Deleted Is: %d",n);
+                break;
+
+            case 3:
+                printf("The Queue Is:\n");
+                PrintQueue();
+                break;
+
+            case 4:
+                exit(0);
+
+            default:
+                printf("Invalid Choice\n");
+        }
+        Menu(&choice);
+    }
+    return 0;
+}
+
+// Menu Function
+void Menu(int* choice) {
+    printf("\n------------QUEUE---------------\n");
+    printf("1. Insert Node\n");
+    printf("2. Delete Node\n");
+    printf("3. Display Queue\n");
+    printf("4. Exit\n");
+    printf("Enter Your Choice: ");
+    scanf("%d", choice); 
+}
+
+// Initialize Function
+void InitQueue(){
+    Front=Rear=NULL;
+}
+
+// Insert Function
+void EnQueue(int Num)
+{
+	//allocation of memory
+    QUEUENODE *Node;
+    Node = (QUEUENODE*)malloc(sizeof(QUEUENODE));
+    Node->Data = Num;
+    Node->Next = NULL;
+
+    // Case 1: Empty queue
+    if (Front== NULL) {
+        Front=Rear=Node;
+        return;
+    }
+
+    // Case 2: Queue is there
+    Rear->Next=Node;
+    Rear=Node;
+}
+
+// Delete Function
+int DeQueue()
+{
+    QUEUENODE*Curr;
+    int Num;
+
+    //case1:no queue
+    if (Front== NULL) {
+        printf("No queue exists.\n");
+        return -1;
+    }
+
+    // Case 2: only one node is present
+    if (Front->Next==NULL) {
+        Num=Front->Data;
+        free(Front);
+        Front=Rear=NULL;
+        return Num;
+    }
+
+    // Case3: get the data from the front make the next node the front & return Num
+    Num=Front->Data;
+    Curr=Front;
+    Front=Front->Next;
+    free(Curr);
+    return Num;
+}
+
+// Print Function
+void PrintQueue(){
+	QUEUENODE*Curr;
+	
+	//case1:no queue
+	if(Front==NULL){
+		return;
+	}
+	
+	//case2:Queue is there
+	Curr=Front;
+	while(Curr){
+		printf("%d->",Curr->Data);
+		Curr=Curr->Next;
+	}
+	printf("NULL\n");
+}
+
+
+/*--------------------------------------
+cirqueue.c
+Show the working of circular queue
+Kavya Kumbhat
+06/08/25
+---------------------------------------*/
+#include <stdio.h>
+#include <stdlib.h>
+#include <memory.h>
+
+typedef struct CirQueueType {
+    int Data;
+    struct CirQueueType *Next;
+} CIRQUEUENODE;
+
+CIRQUEUENODE *Front, *Rear;
+
+// Function Prototypes
+void Menu(int* choice);
+void InitQueue();
+void EnQueue(int Num);
+int DeQueue();
+void PrintQueue();
+
+// Main Function
+int main() {
+    int choice,Num;
+    InitQueue();
+    Menu(&choice);
+    while (choice) {
+        switch (choice) {
+            case 1:
+                printf("Enter the number\n");
+                scanf("%d", &Num);
+                EnQueue(Num);
+                break;
+
+            case 2:
+                Num=DeQueue();
+                printf("The Deleted Number=%d",Num);
+                break;
+
+            case 3:
+                printf("The Queue Is:\n");
+                PrintQueue();
+                break;
+
+            case 4:
+                exit(0);
+
+            default:
+                printf("Invalid Choice\n");
+        }
+        Menu(&choice);
+    }
+}
+
+// Menu Function
+void Menu(int* choice) {
+    printf("\n------------CIRCULAR QUEUE---------------\n");
+    printf("1. Insert Node\n");
+    printf("2. Delete Node\n");
+    printf("3. Display Queue\n");
+    printf("4. Exit\n");
+    printf("Enter Your Choice: ");
+    scanf("%d", choice); 
+}
+
+// Initialize Function
+void InitQueue(){
+    Front=Rear=NULL;
+}
+
+// Insert Function
+void EnQueue(int Num)
+{
+    CIRQUEUENODE *Node;
+    Node = (CIRQUEUENODE*)malloc(sizeof(CIRQUEUENODE));
+    Node->Data = Num;
+    Node->Next = NULL;
+
+    // Case 1: Empty queue
+    if (Front== NULL) {
+        Front=Rear=Node;
+        Rear->Next=Front;
+        return;
+    }
+
+    // Case 2: Queue is there,attach next to the rear and link it to the front
+    Rear->Next=Node;
+    Rear=Node;
+    Rear->Next=Front;
+}
+
+// Delete Function
+int DeQueue()
+{
+    CIRQUEUENODE*Curr;
+    int Num;
+
+    //case1:no queue
+    if (Front== NULL) {
+        printf("No queue exists.\n");
+        return -1;
+    }
+
+    // Case 2: only one node is present,delete the node & make front and rear null
+    if (Front==Rear) {  //other alternative=Front->Next==NULL
+        Num=Front->Data;
+        Front=Rear=NULL;
+        return Num;
+    }
+
+    // Case3: more than one node,delete the 1st node & make the next node as front plus link rear to the next
+    Curr=Front;
+    Front=Front->Next;
+    Num=Curr->Data;
+    free(Curr);
+    Rear->Next=Front;
+    return Num;
+}
+
+// Print Function
+void PrintQueue() {
+    CIRQUEUENODE* Curr;
+
+    //case1:no queue
+    if (Front == NULL) {
+        printf("Queue is empty.\n");
+        return;
+    }
+
+    //case3:queue is there
+    Curr = Front;
+    printf("Queue: ");
+    do {
+        printf("%d -> ", Curr->Data);
+        Curr = Curr->Next;
+    } while (Curr != Front);
+    
+    printf("%d", Front->Data);
+}

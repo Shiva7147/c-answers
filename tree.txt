@@ -1,0 +1,163 @@
+/*-----------------------
+BinarySearchTree.c
+A Program to show working of a Binary Search Tree (Global Root, No Deletion)
+Kavya
+03/09/25
+-------------------------*/
+#include <stdio.h>
+#include <stdlib.h>
+
+// Structure for a BST Node
+typedef struct BSTNode {
+    int Data;
+    struct BSTNode* Left;
+    struct BSTNode* Right;
+} BSTNODE;
+
+// Global Root
+BSTNODE* Root = NULL;
+
+// Function Prototypes
+BSTNODE* CreateNode(int data);
+void Insert(int data);
+BSTNODE* Search(BSTNODE* root, int key);
+void Inorder(BSTNODE* root);
+void Preorder(BSTNODE* root);
+void Postorder(BSTNODE* root);
+void Menu(int* choice);
+
+// Main function
+int main() {
+    int choice, val;
+
+    Menu(&choice);
+    while (choice) {
+        switch (choice) {
+            case 1:
+                printf("Enter value to insert: ");
+                scanf("%d", &val);
+                Insert(val);
+                break;
+
+            case 2:
+                printf("Enter value to search: ");
+                scanf("%d", &val);
+                if (Search(Root, val))
+                    printf("%d found in BST.\n", val);
+                else
+                    printf("%d not found in BST.\n", val);
+                break;
+
+            case 3:
+                printf("Inorder Traversal: ");
+                Inorder(Root);
+                printf("\n");
+                break;
+
+            case 4:
+                printf("Preorder Traversal: ");
+                Preorder(Root);
+                printf("\n");
+                break;
+
+            case 5:
+                printf("Postorder Traversal: ");
+                Postorder(Root);
+                printf("\n");
+                break;
+
+            case 6:
+                exit(0);
+
+            default:
+                printf("Invalid choice!\n");
+        }
+        Menu(&choice);
+    }
+    return 0;
+}
+
+// Menu Function
+void Menu(int* choice) {
+    printf("\n------------BINARY SEARCH TREE---------------\n");
+    printf("1. Insert Node\n");
+    printf("2. Search Node\n");
+    printf("3. Inorder Traversal\n");
+    printf("4. Preorder Traversal\n");
+    printf("5. Postorder Traversal\n");
+    printf("6. Exit\n");
+    printf("Enter Your Choice: ");
+    scanf("%d", choice);
+}
+
+// Create new node
+BSTNODE* CreateNode(int data) {
+    BSTNODE* node = (BSTNODE*)malloc(sizeof(BSTNODE));
+    node->Data = data;
+    node->Left = node->Right = NULL;
+    return node;
+}
+
+// Insert node (using global Root)
+void Insert(int data) {
+    BSTNODE* newNode = CreateNode(data);
+    BSTNODE* parent = NULL;
+    BSTNODE* curr = Root;
+
+    while (curr != NULL) {
+        parent = curr;
+        if (data < curr->Data)
+            curr = curr->Left;
+        else if (data > curr->Data)
+            curr = curr->Right;
+        else {
+            printf("Duplicate value %d not inserted.\n", data);
+            free(newNode);
+            return;
+        }
+    }
+
+    if (parent == NULL) {
+        Root = newNode;  // Tree was empty
+    } else if (data < parent->Data) {
+        parent->Left = newNode;
+    } else {
+        parent->Right = newNode;
+    }
+}
+
+// Search node
+BSTNODE* Search(BSTNODE* root, int key) {
+    if (root == NULL || root->Data == key)
+        return root;
+
+    if (key < root->Data)
+        return Search(root->Left, key);
+    else
+        return Search(root->Right, key);
+}
+
+// Traversals
+void Inorder(BSTNODE* root) {
+    if (root != NULL) {
+        Inorder(root->Left);
+        printf("%d ", root->Data);
+        Inorder(root->Right);
+    }
+}
+
+void Preorder(BSTNODE* root) {
+    if (root != NULL) {
+        printf("%d ", root->Data);
+        Preorder(root->Left);
+        Preorder(root->Right);
+    }
+}
+
+void Postorder(BSTNODE* root) {
+    if (root != NULL) {
+        Postorder(root->Left);
+        Postorder(root->Right);
+        printf("%d ", root->Data);
+    }
+}

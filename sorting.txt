@@ -1,0 +1,288 @@
+#include <stdio.h>
+
+void input(int A[], int n) {
+    for (int i = 0; i < n; i++) {
+        printf("Enter number %d: ", i+1);
+        scanf("%d", &A[i]);
+    }
+}
+
+void print(int A[], int n) {
+    for (int i = 0; i < n; i++)
+        printf("%d ", A[i]);
+    printf("\n");
+}
+
+void bubbleSort(int A[], int n) {
+    for (int i = 0; i < n-1; i++) {
+        for (int j = 0; j < n-i-1; j++) {
+            if (A[j] > A[j+1]) {
+                int temp = A[j];
+                A[j] = A[j+1];
+                A[j+1] = temp;
+            }
+        }
+    }
+}
+
+int main() {
+    int A[20], n;
+    printf("Enter size: ");
+    scanf("%d", &n);
+
+    input(A, n);
+    bubbleSort(A, n);
+    printf("Sorted Array: ");
+    print(A, n);
+
+    return 0;
+}
+
+
+
+STRINGG
+
+
+
+
+
+#include <stdio.h>
+#include <string.h>
+
+void input(char A[20][20], int n) {
+    for (int i = 0; i < n; i++) {
+        printf("Enter string %d: ", i+1);
+        scanf("%s", A[i]);
+    }
+}
+
+void print(char A[20][20], int n) {
+    for (int i = 0; i < n; i++)
+        printf("%s\n", A[i]);
+}
+
+void bubbleSort(char A[20][20], int n) {
+    char temp[20];
+    for (int i = 0; i < n-1; i++) {
+        for (int j = 0; j < n-i-1; j++) {
+            if (strcmp(A[j], A[j+1]) > 0) {
+                strcpy(temp, A[j]);
+                strcpy(A[j], A[j+1]);
+                strcpy(A[j+1], temp);
+            }
+        }
+    }
+}
+
+int main() {
+    char A[20][20];
+    int n;
+    printf("Enter number of strings: ");
+    scanf("%d", &n);
+
+    input(A, n);
+    bubbleSort(A, n);
+    printf("Sorted Strings:\n");
+    print(A, n);
+
+    return 0;
+}
+
+
+
+SELECTION SORT 
+
+
+
+
+#include <stdio.h>
+
+void input(int A[], int n) {
+    for (int i = 0; i < n; i++) {
+        printf("Enter number %d: ", i+1);
+        scanf("%d", &A[i]);
+    }
+}
+
+void print(int A[], int n) {
+    for (int i = 0; i < n; i++)
+        printf("%d ", A[i]);
+    printf("\n");
+}
+
+void selectionSort(int A[], int n) {
+    for (int i = 0; i < n-1; i++) {
+        int min = i;
+        for (int j = i+1; j < n; j++) {
+            if (A[j] < A[min])
+                min = j;
+        }
+        int temp = A[i];
+        A[i] = A[min];
+        A[min] = temp;
+    }
+}
+
+int main() {
+    int A[20], n;
+    printf("Enter size: ");
+    scanf("%d", &n);
+
+    input(A, n);
+    selectionSort(A, n);
+    printf("Sorted Array: ");
+    print(A, n);
+
+    return 0;
+}
+
+
+
+
+LINEAR SEARCH
+
+
+
+
+
+
+
+
+#include <stdio.h>
+
+int fnSearchNum(int N, int A[20], int SearchNum) {
+    for (int i = 0; i < N; i++) {
+        if (A[i] == SearchNum)
+            return 1;
+    }
+    return -1;
+}
+
+int main() {
+    int A[20], n, num, result;
+
+    printf("Enter size: ");
+    scanf("%d", &n);
+
+    for (int i = 0; i < n; i++) {
+        printf("Enter number %d: ", i+1);
+        scanf("%d", &A[i]);
+    }
+
+    printf("Enter number to search: ");
+    scanf("%d", &num);
+
+    result = fnSearchNum(n, A, num);
+
+    if (result == 1)
+        printf("Number FOUND\n");
+    else
+        printf("Number NOT FOUND\n");
+
+    return 0;
+}
+
+
+
+
+
+BINARY SEARCH
+
+
+
+
+#include <stdio.h>
+
+int fnBinarySearch(int N, int A[20], int SearchNum) {
+    int low = 0, high = N-1, mid;
+
+    while (low <= high) {
+        mid = (low + high) / 2;
+        if (A[mid] == SearchNum)
+            return 1;
+        else if (A[mid] < SearchNum)
+            low = mid + 1;
+        else
+            high = mid - 1;
+    }
+    return -1;
+}
+
+int main() {
+    int A[20], n, num, result;
+
+    printf("Enter size: ");
+    scanf("%d", &n);
+
+    printf("Enter sorted numbers:\n");
+    for (int i = 0; i < n; i++) {
+        scanf("%d", &A[i]);
+    }
+
+    printf("Enter number to search: ");
+    scanf("%d", &num);
+
+    result = fnBinarySearch(n, A, num);
+
+    if (result == 1)
+        printf("Number FOUND\n");
+    else
+        printf("Number NOT FOUND\n");
+
+    return 0;
+}
+
+
+INSERTION
+
+
+
+
+
+
+
+
+#include <stdio.h>
+
+void input(int A[], int n) {
+    for (int i = 0; i < n; i++) {
+        printf("Enter number %d: ", i+1);
+        scanf("%d", &A[i]);
+    }
+}
+
+void print(int A[], int n) {
+    for (int i = 0; i < n; i++)
+        printf("%d ", A[i]);
+    printf("\n");
+}
+
+void insertionSort(int A[], int n) {
+    for (int i = 1; i < n; i++) {
+        int key = A[i];
+        int j = i - 1;
+        while (j >= 0 && A[j] > key) {
+            A[j+1] = A[j];
+            j--;
+        }
+        A[j+1] = key;
+    }
+}
+
+int main() {
+    int A[20], n;
+    printf("Enter size: ");
+    scanf("%d", &n);
+
+    input(A, n);
+    insertionSort(A, n);
+    printf("Sorted Array: ");
+    print(A, n);
+
+    return 0;
+}
+
+
+
+
+
