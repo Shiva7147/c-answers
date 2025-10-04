@@ -1,11 +1,6 @@
-/*----------------------------------------------
-linkedlist.c
-Program To Perform Operations On The Linked List
-Kavya Kumbhat
-09/07/25
------------------------------------------------*/
 #include <stdio.h>
 #include <stdlib.h>
+#include <memory.h>
 
 typedef struct ListType {
     int Data;
@@ -26,33 +21,34 @@ int MaxNum(LISTNODE* Head);
 void DeleteNode(int Num);
 
 int main() {
-    int choice, n, Num;
-    int i;
+    int choice = 0, n, Num;
     InitList();
 
     do {
-        printf("\n------------ LINKED LIST MENU ---------------\n");
+        printf("\n------------LINKED LIST---------------\n");
         printf("1. Insert list\n");
         printf("2. Print list\n");
         printf("3. Delete the first node\n");
         printf("4. Delete the last node\n");
-        printf("5. Display the number of nodes\n");
-        printf("6. Display the maximum number\n");
-        printf("7. Search a number\n");
+        printf("5. Display the no of nodes\n");
+        printf("6. Display the maximum no\n");
+        printf("7. Search a no\n");
         printf("8. Delete a number\n");
         printf("9. Exit\n");
-        printf("---------------------------------------------\n");
         printf("Enter Your Choice: ");
         scanf("%d", &choice);
 
         switch (choice) {
             case 1:
-                printf("Enter the number of elements: ");
+                printf("Enter the number of elements to be inserted in the list: ");
                 scanf("%d", &n);
                 printf("Enter the elements:\n");
-                for (i = 0; i < n; i++) {
-                    scanf("%d", &Num);
-                    InsertListNode(Num);
+                {
+                    int i;
+                    for (i = 1; i <= n; i++) {
+                        scanf("%d", &Num);
+                        InsertListNode(Num);
+                    }
                 }
                 break;
 
@@ -63,37 +59,32 @@ int main() {
 
             case 3:
                 n = DeleteFirstNode();
-                if (n != -1)
-                    printf("The First Node Deleted Is: %d\n", n);
+                printf("The First Node Deleted Is: %d", n);
                 break;
 
             case 4:
                 n = DeleteLastNode();
-                if (n != -1)
-                    printf("The Last Node Deleted Is: %d\n", n);
+                printf("The Last Node Deleted Is: %d", n);
                 break;
 
             case 5:
                 n = CountNode(Head);
-                printf("The Number of Nodes In The List Is: %d\n", n);
+                printf("The Number Of Nodes In The List Is: %d", n);
                 break;
 
             case 6:
-                if (Head != NULL) {
-                    n = MaxNum(Head);
-                    printf("The Maximum Number In The List Is: %d\n", n);
-                } else {
-                    printf("List is empty.\n");
-                }
+                n = MaxNum(Head);
+                printf("The Maximum Number In The List Is: %d", n);
                 break;
 
             case 7:
-                printf("Enter a number to search: ");
+                printf("Enter a number to be searched: ");
                 scanf("%d", &n);
-                if (SearchNum(n))
+                if (SearchNum(n)) {
                     printf("%d is found in the list.\n", n);
-                else
+                } else {
                     printf("%d is not found in the list.\n", n);
+                }
                 break;
 
             case 8:
@@ -103,28 +94,23 @@ int main() {
                 break;
 
             case 9:
-                printf("Exiting program...\n");
                 exit(0);
 
             default:
-                printf("Invalid Choice! Please try again.\n");
+                printf("Invalid Choice\n");
         }
 
-        printf("\nPress Enter to continue...");
-        getchar(); // to clear newline
-        getchar();
-
-    } while (1);
+    } while (choice != 9);
 
     return 0;
 }
 
-// Initialize the list
+// Initialize function
 void InitList() {
     Head = NULL;
 }
 
-// Insert a new node at the end
+// Insert function
 void InsertListNode(int Num) {
     LISTNODE *Curr, *Node;
     Node = (LISTNODE*)malloc(sizeof(LISTNODE));
@@ -137,14 +123,14 @@ void InsertListNode(int Num) {
     }
 
     Curr = Head;
-    while (Curr->Next != NULL)
+    while (Curr->Next != NULL) {
         Curr = Curr->Next;
-
+    }
     Curr->Next = Node;
 }
 
-// Print the list
-void PrintList(LISTNODE *Head) {
+// Print function
+void PrintList(LISTNODE* Head) {
     LISTNODE* Curr;
     Curr = Head;
 
@@ -153,38 +139,41 @@ void PrintList(LISTNODE *Head) {
         return;
     }
 
-    while (Curr != NULL) {
-        printf("%d -> ", Curr->Data);
+    while (Curr) {
+        printf("%d->", Curr->Data);
         Curr = Curr->Next;
     }
     printf("NULL\n");
 }
 
-// Search for a number
+// Search a given number
 int SearchNum(int Num) {
-    LISTNODE* Curr;
-    Curr = Head;
+    LISTNODE* Curr = Head;
+
+    if (Head == NULL) {
+        printf("No List\n");
+        return 0;
+    }
+
     while (Curr != NULL) {
-        if (Curr->Data == Num)
+        if (Num == Curr->Data) {
             return 1;
+        }
         Curr = Curr->Next;
     }
     return 0;
 }
 
-// Delete a specific number
+// Delete a specific node
 void DeleteNode(int Num) {
-    LISTNODE *Curr, *Prev;
-    Curr = Head;
-    Prev = NULL;
+    LISTNODE *Curr = Head, *Prev = NULL;
 
     if (Head == NULL) {
-        printf("List is empty.\n");
+        printf("No list exists.\n");
         return;
     }
 
-    // Case 1: delete head
-    if (Head->Data == Num) {
+    if (Num == Head->Data) {
         Curr = Head;
         Head = Head->Next;
         free(Curr);
@@ -192,35 +181,34 @@ void DeleteNode(int Num) {
         return;
     }
 
-    // Case 2: search the number
-    while (Curr != NULL && Curr->Data != Num) {
+    while (Curr) {
+        if (Num == Curr->Data) {
+            Prev->Next = Curr->Next;
+            free(Curr);
+            printf("%d deleted from the list.\n", Num);
+            return;
+        }
         Prev = Curr;
         Curr = Curr->Next;
     }
 
-    if (Curr == NULL) {
-        printf("%d not found in the list.\n", Num);
-        return;
-    }
-
-    Prev->Next = Curr->Next;
-    free(Curr);
-    printf("%d deleted from the list.\n", Num);
+    printf("%d is not found in the list.\n", Num);
 }
 
 // Delete first node
 int DeleteFirstNode() {
-    LISTNODE* Temp;
+    LISTNODE* Curr;
     int Num;
 
     if (Head == NULL) {
-        printf("List is empty.\n");
+        printf("No list is present\n");
         return -1;
     }
-    Temp = Head;
-    Num = Temp->Data;
+
+    Curr = Head;
     Head = Head->Next;
-    free(Temp);
+    Num = Curr->Data;
+    free(Curr);
     return Num;
 }
 
@@ -230,46 +218,50 @@ int DeleteLastNode() {
     int Num;
 
     if (Head == NULL) {
-        printf("List is empty.\n");
+        printf("No list is present\n");
         return -1;
     }
-    if (Head->Next == NULL) {
-        Num = Head->Data;
-        free(Head);
+
+    Curr = Head;
+    if (Curr->Next == NULL) {
+        Num = Curr->Data;
+        free(Curr);
         Head = NULL;
         return Num;
     }
 
-    Prev = NULL;
-    Curr = Head;
     while (Curr->Next != NULL) {
         Prev = Curr;
         Curr = Curr->Next;
     }
+
     Prev->Next = NULL;
     Num = Curr->Data;
     free(Curr);
     return Num;
 }
 
-// Count the nodes
+// Count function
 int CountNode(LISTNODE* Head) {
-    int count;
-    LISTNODE* Curr;
+    int count = 0;
+    LISTNODE* Curr = Head;
 
-    count = 0;
-    Curr = Head;
-    while (Curr != NULL) {
-        count++;
+    while (Curr) {
+        count = count + 1;
         Curr = Curr->Next;
     }
     return count;
 }
 
-// Find the maximum number
+// Max function
 int MaxNum(LISTNODE* Head) {
     int max;
     LISTNODE* Curr;
+
+    if (Head == NULL) {
+        printf("No list present\n");
+        return -1;
+    }
 
     max = Head->Data;
     Curr = Head->Next;
@@ -472,3 +464,4 @@ void Reverse() {
 
     Head = Prev;
 }
+
